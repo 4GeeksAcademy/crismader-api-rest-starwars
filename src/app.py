@@ -190,6 +190,349 @@ def get_specie(specie_id):
         "specie": specie.serialize()
     }), 200
 
+#Hacer post de cada endpoint
+@app.route('/user', methods=['POST'])
+def create_user():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    email = body.get("email")
+    password = body.get("password")
+    user_name = body.get("user_name")
+
+    if not email or not password or not user_name:
+        return jsonify({"msg": "email, password and user_name are required"}), 400
+
+    new_user = User(
+        email=email,
+        password=password,
+        user_name=user_name
+    )
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({
+        "msg": "User created",
+        "user": new_user.serialize()
+    }), 201
+
+@app.route('/character', methods=['POST'])
+def create_character():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    name = body.get("name")
+    description = body.get("description")
+    imageLink = body.get("imageLink")
+
+    if not name or not description or not imageLink:
+        return jsonify({"msg": "name, description and imageLink are required"}), 400
+
+    new_character = Character(
+        name=name,
+        description=description,
+        imageLink=imageLink
+    )
+
+    db.session.add(new_character)
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Character created",
+        "character": new_character.serialize()
+    }), 201
+
+@app.route('/planet', methods=['POST'])
+def create_planet():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    name = body.get("name")
+    description = body.get("description")
+    imageLink = body.get("imageLink")
+
+    if not name or not description or not imageLink:
+        return jsonify({"msg": "name, description and imageLink are required"}), 400
+
+    new_planet = Planet(
+        name=name,
+        description=description,
+        imageLink=imageLink
+    )
+
+    db.session.add(new_planet)
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Planet created",
+        "planet": new_planet.serialize()
+    }), 201
+
+@app.route('/film', methods=['POST'])
+def create_film():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    name = body.get("name")
+    description = body.get("description")
+    imageLink = body.get("imageLink")
+
+    if not name or not description or not imageLink:
+        return jsonify({"msg": "name, description and imageLink are required"}), 400
+
+    new_film = Film(
+        name=name,
+        description=description,
+        imageLink=imageLink
+    )
+
+    db.session.add(new_film)
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Film created",
+        "film": new_film.serialize()
+    }), 201
+
+@app.route('/vehicle', methods=['POST'])
+def create_vehicle():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    name = body.get("name")
+    description = body.get("description")
+    imageLink = body.get("imageLink")
+
+    if not name or not description or not imageLink:
+        return jsonify({"msg": "name, description and imageLink are required"}), 400
+
+    new_vehicle = Vehicle(
+        name=name,
+        description=description,
+        imageLink=imageLink
+    )
+
+    db.session.add(new_vehicle)
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Vehicle created",
+        "vehicle": new_vehicle.serialize()
+    }), 201
+
+@app.route('/specie', methods=['POST'])
+def create_specie():
+    body = request.get_json()
+
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    name = body.get("name")
+    description = body.get("description")
+    imageLink = body.get("imageLink")
+
+    if not name or not description or not imageLink:
+        return jsonify({"msg": "name, description and imageLink are required"}), 400
+
+    new_specie = Specie(
+        name=name,
+        description=description,
+        imageLink=imageLink
+    )
+
+    db.session.add(new_specie)
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Specie created",
+        "specie": new_specie.serialize()
+    }), 201
+
+#Hacer una actualización de datos de un elemento especifico de cualquier categoria
+
+@app.route('/character/<int:character_id>', methods=['PUT'])
+def update_character(character_id):
+    character = Character.query.get(character_id)
+
+    if character is None:
+        return jsonify({"msg": "Character not found"}), 404
+
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    character.name = body.get("name", character.name)
+    character.description = body.get("description", character.description)
+    character.imageLink = body.get("imageLink", character.imageLink)
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Character updated",
+        "character": character.serialize()
+    }), 200
+
+@app.route('/planet/<int:planet_id>', methods=['PUT'])
+def update_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+
+    if planet is None:
+        return jsonify({"msg": "Planet not found"}), 404
+
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    planet.name = body.get("name", planet.name)
+    planet.description = body.get("description", planet.description)
+    planet.imageLink = body.get("imageLink", planet.imageLink)
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Planet updated",
+        "planet": planet.serialize()
+    }), 200
+
+@app.route('/film/<int:film_id>', methods=['PUT'])
+def update_film(film_id):
+    film = Film.query.get(film_id)
+
+    if film is None:
+        return jsonify({"msg": "Film not found"}), 404
+
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    film.name = body.get("name", film.name)
+    film.description = body.get("description", film.description)
+    film.imageLink = body.get("imageLink", film.imageLink)
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Film updated",
+        "film": film.serialize()
+    }), 200
+
+@app.route('/vehicle/<int:vehicle_id>', methods=['PUT'])
+def update_vehicle(vehicle_id):
+    vehicle = Vehicle.query.get(vehicle_id)
+
+    if vehicle is None:
+        return jsonify({"msg": "Vehicle not found"}), 404
+
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    vehicle.name = body.get("name", vehicle.name)
+    vehicle.description = body.get("description", vehicle.description)
+    vehicle.imageLink = body.get("imageLink", vehicle.imageLink)
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Vehicle updated",
+        "vehicle": vehicle.serialize()
+    }), 200
+
+@app.route('/specie/<int:specie_id>', methods=['PUT'])
+def update_specie(specie_id):
+    specie = Specie.query.get(specie_id)
+
+    if specie is None:
+        return jsonify({"msg": "Specie not found"}), 404
+
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({"msg": "Missing JSON body"}), 400
+
+    specie.name = body.get("name", specie.name)
+    specie.description = body.get("description", specie.description)
+    specie.imageLink = body.get("imageLink", specie.imageLink)
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Specie updated",
+        "specie": specie.serialize()
+    }), 200
+
+#Borrar elementos especificos
+@app.route('/character/<int:character_id>', methods=['DELETE'])
+def delete_character(character_id):
+    character = Character.query.get(character_id)
+
+    if character is None:
+        return jsonify({"msg": "Character not found"}), 404
+
+    db.session.delete(character)
+    db.session.commit()
+
+    return jsonify({"msg": "Character deleted"}), 200
+
+@app.route('/planet/<int:planet_id>', methods=['DELETE'])
+def delete_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+
+    if planet is None:
+        return jsonify({"msg": "Planet not found"}), 404
+
+    db.session.delete(planet)
+    db.session.commit()
+
+    return jsonify({"msg": "Planet deleted"}), 200
+
+@app.route('/film/<int:film_id>', methods=['DELETE'])
+def delete_film(film_id):
+    film = Film.query.get(film_id)
+
+    if film is None:
+        return jsonify({"msg": "Film not found"}), 404
+
+    db.session.delete(film)
+    db.session.commit()
+
+    return jsonify({"msg": "Film deleted"}), 200
+
+@app.route('/vehicle/<int:vehicle_id>', methods=['DELETE'])
+def delete_vehicle(vehicle_id):
+    vehicle = Vehicle.query.get(vehicle_id)
+
+    if vehicle is None:
+        return jsonify({"msg": "Vehicle not found"}), 404
+
+    db.session.delete(vehicle)
+    db.session.commit()
+
+    return jsonify({"msg": "Vehicle deleted"}), 200
+
+@app.route('/specie/<int:specie_id>', methods=['DELETE'])
+def delete_specie(specie_id):
+    specie = Specie.query.get(specie_id)
+
+    if specie is None:
+        return jsonify({"msg": "Specie not found"}), 404
+
+    db.session.delete(specie)
+    db.session.commit()
+
+    return jsonify({"msg": "Specie deleted"}), 200
+
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
