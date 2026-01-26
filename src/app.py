@@ -360,6 +360,34 @@ def delete_favorite_planet(user_id, planet_id):
 
     return jsonify({"msg": "Favorite planet deleted"}), 200
 
+@app.route('/user/<int:user_id>/favorites', methods=['GET'])
+def get_user_favorites(user_id):
+    user = User.query.get(user_id)
+
+    if user is None:
+        return jsonify({"msg": "User not found"}), 404
+
+    all_fav_characters = Favorite_character.query.filter_by(user_id=user_id).all()
+    all_fav_planets = Favorite_planet.query.filter_by(user_id=user_id).all()
+
+    results_characters = list(map(
+        lambda fav: Character.query.get(fav.character_id).serialize(),
+        all_fav_characters
+    ))
+
+    results_planets = list(map(
+        lambda fav: Planet.query.get(fav.planet_id).serialize(),
+        all_fav_planets
+    ))
+
+    response_body = {
+        "msg": "This is your GET /user/<id>/favorites response",
+        "user_id": user_id,
+        "favorite_characters": results_characters,
+        "favorite_planets": results_planets
+    }
+
+    return jsonify(response_body), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
